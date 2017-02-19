@@ -1,0 +1,12 @@
+#!/home/porcupine/hn5/env/bin/python
+# -*- coding: utf-8 -*-
+
+try:
+    import dimensions
+except ImportError:
+    import sys
+    import os
+    sys.path.insert(0, os.path.abspath('..'))
+    import dimensions
+
+dimensions.cli()
