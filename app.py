@@ -1,12 +1,15 @@
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element, SubElement, Comment
 from xml.dom import minidom
+import datetime
 
 from flask import Flask, jsonify, request, render_template, Response
+
 from tweet import post_tweet
 from rollback import get_time_since_rollback, parse_message
 from corporate import Corporate
 from trump import TrumpNews
+from lonely import Lonely 
 
 
 application = Flask(__name__)
@@ -102,11 +105,28 @@ def trump():
 
 @application.route("/api/v1/lonely/subscribe", methods=['GET', 'POST'])
 def subscribe():
-	message = "Hello"
+	lonely = Lonely()
+	if request.form['Body'].lower().find("unsubscribe") > -1:
+		message = "Sorry to see you go! If you would like to resubscribe simply reply with SUBSCRIBE."
+	elif request.form['Body'].lower().find("subscribe") > -1:
+		message = lonely.subscribe(request.form['From'])
+	else:
+		message = "Welcome to Lonely Places, if you would like to subscribe reply with SUBSCRIBE. If you're already subscribed and want to unsubscribe, reply with UNSUBSCRIBE."
 	response = Element('Response')
 	message_tag = SubElement(response, 'Message')
 	message_tag.text = message
 	return Response(prettify(response), mimetype='text/xml')
+
+
+@application.route("/api/v1/lonely/messages", methods=['GET'])
+def lonely_messages():
+	lonely = Lonely()
+	day_of_week = datetime.datetime.today().weekday() + 1
+	if day_of_week == 1:
+		day_of_week = 8
+	message = lonely.get_messages(day_of_week)
+	lonely.get_subscribers(message)
+	return jsonify(True)
 
 
 def prettify(elem):
