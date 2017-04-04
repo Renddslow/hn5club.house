@@ -43,6 +43,15 @@ class Lonely:
 						.order_by(models.Messages.message_created.desc())\
 						.get()
 		return message.message_text
+
+
+	def create_message(self, data):
+		try:
+			models.Messages.create(**data)
+		except:
+			return False
+		else:
+			return True
 		
 
 	def get_subscribers(self, message):
