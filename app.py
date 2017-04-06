@@ -215,7 +215,14 @@ def jmart_get():
 
 @application.route("/api/v1/word", methods=['GET', 'POST'])
 def urban_dict_get():
-	ud = requests.get("http://www.urbandictionary.com/random.php")
+	if request.method == "POST":
+		message = request.get_json()['item']['message']['message'].replace("/ud", "").strip()
+	else:
+		message = request.args.get("term")
+	if message and len(message):
+		ud = requests.get("http://www.urbandictionary.com/define.php?term={}".format(message))
+	else:
+		ud = requests.get("http://www.urbandictionary.com/random.php")
 	d = pq(ud.text)
 	title = d(".word:first").html()
 	meaning = BeautifulSoup(d(".meaning:first").html().replace("\n", "")).text
