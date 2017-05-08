@@ -4,6 +4,7 @@ from xml.dom import minidom
 import datetime
 import uuid
 import json
+import random
 
 from flask import Flask, jsonify, request, render_template, Response, g
 import requests
@@ -16,7 +17,6 @@ from corporate import Corporate
 from trump import TrumpNews
 from lonely import Lonely 
 from models import DATABASE
-import jmart
 
 
 application = Flask(__name__)
@@ -185,33 +185,6 @@ def tankSlayer():
 def pricecheck():
 	headers = {"Browser"}
 
-@application.route("/api/v1/jmart/deals/new", methods=['POST'])
-def jmart_create():
-	data = {
-		"productName": request.form['productName'],
-		"productImageURI": request.form['productImage'],
-		"productDealText": request.form['productDealText'],
-		"productDealDate": request.form['productDealDate'] 
-	}
-	try:
-		jmart.create(**data)
-	except:
-		return jsonify({"success": False})
-	else:
-		return jsonify({"success": True, "message": "Well I'll be. You dun made a new prerderct!"})
-
-
-@application.route("/api/v1/jmart/deals", methods=['GET', 'POST'])
-def jmart_get():
-	card = jmart.get()
-	deal = {
-		"color": "red",
-		"message": "jmart",
-		"notify": True,
-		"card": card
-	}
-	return jsonify(deal)
-	
 
 @application.route("/api/v1/word", methods=['GET', 'POST'])
 def urban_dict_get():
@@ -255,6 +228,94 @@ def urban_dict_get():
 	}
 	return jsonify(response)
 
+
+@application.route("/api/v1/yarr/hipchat", methods=['POST'])
+@application.route("/api/v1/yarr", methods=['POST'])
+def pirate_speak():
+	if "hipchat" in request.url_rule.rule:
+		message = request.get_json()['item']['message']['message'].replace("/yarr", "").strip()
+	else:
+		message = request.get_json()['text']
+	headers = { "X-Funtranslations-Api-Secret": "W_yk6LDtNye2t_mHKhBJqQeF" }
+	pirate_url = "http://api.funtranslations.com/translate/pirate.json"
+	try:
+		_request = requests.post(url=pirate_url, headers=headers, data={"text": message}).json()
+		pirate_speak = _request["contents"]["translated"]
+	except Exception as e:
+		pirate_speak = "Yarr it looks like there be a problem hookin' up our ship to the cap'n ship. Ye may have been fiddlin wit her too much."
+		pirate_speak += "Here be what the cap'n say: {}".format(_request["error"]["message"])
+	pirate_speak = pirate_speak.lower().replace("that's what she said", "aye that be what the wench said to ye priest")
+	pirate_speak = pirate_speak.replace("netstudio", "that pile of bilge")
+	pirate_speak = pirate_speak.replace("vba", "a poor man's stench")
+	pirate_speak = pirate_speak.replace("php", "pig's bottom")
+	pirate_speak = pirate_speak.replace("coldfusion", "me ex-lover's cold heart")
+	pirate_speak = pirate_speak.replace(" is ", " be ")
+	response = {
+		"color": "red",
+		"message": pirate_speak,
+		"notify": True,
+		"message_type": "text"
+	}
+	return jsonify(response)
+
+
+@application.route("/api/v1/magic8/hipchat", methods=['POST'])
+@application.route("/api/v1/magic8", methods=['POST'])
+def magic8():
+	standard_answers = [
+		"it is certain.",
+		"it is decidedly so.",
+		"without a doubt.",
+		"it is known.",
+		"you may rely on it.",
+		"most likely.",
+		"the outlook is good.",
+		"yes.",
+		"all signs point to yes.",
+		"the reply is hazy. Try again.",
+		"the spirits sleep. Ask again later.",
+		"I better not tell you.",
+		"I cannot predict that now.",
+		"concentrate and ask again",
+		"don't count on it.",
+		"my reply is no.",
+		"my sources say no.",
+		"the outlook is not so good.",
+		"very doubtful."
+	]
+	scary_answers = [
+		"she is coming.",
+		"a census taker once tried to test me. I ate his liver with some fava beans and a nice Chianti.",
+		"death approaches.",
+		"winter is coming.",
+		"hi I'm Chucky. Want to play?",
+		"do you want to play with us?",
+		"we are legion. We do not forgive. We do not forget. Expect us.",
+		"the dead have awaken.",
+		"listen to me. None of this is real. They're trying to keep you down. Don't trust--",
+		"I am so so sorry. I never wanted this to happen.",
+		"wake up.",
+		"don't blink. Don't even blink."
+	]
+	if "hipchat" in request.url_rule.rule:
+		question = request.get_json()['item']['message']['message'].replace("/8ball", "").strip()
+		name = request.get_json()['item']['message']['from']['name'].split(' ')[0].strip()
+	else:
+		question = request.get_json()['message']
+		name = "Seeker of wisdom"
+	# store message for later
+	if random.randrange(10) == 7:
+		answer = "{}, {}".format(name, random.choice(scary_answers))
+	else:
+		answer = "{}, {}".format(name, random.choice(standard_answers))
+	response = {
+		"color": "black",
+		"message": answer,
+		"notify": True,
+		"message_type": "text"
+	}
+	return jsonify(response)
+	
 
 
 def prettify(elem):
