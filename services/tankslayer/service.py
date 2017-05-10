@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 import requests
 
 tankslayer_api = Blueprint("services.tankslayer.service", __name__)

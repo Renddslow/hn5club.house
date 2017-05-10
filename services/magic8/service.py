@@ -44,11 +44,17 @@ def magic8():
 		"wake up.",
 		"don't blink. Don't even blink."
 	]
+	if "hipchat" in request.url_rule.rule:
+		question = request.get_json()['item']['message']['message'].replace("/ud", "").strip()
+		name = request.get_json()['item']['message']['from']['name']
+	else:
+		question = request.get_json()['message']
+		name = "Seeker of Wisdom"
 	if len(question) < 1:
 		answer = "I'm sorry {}, the spirits need a question to discern an answer.".format(name)
-	elif name.find("Forrest") > -1 or name.find("Beau"):
+	elif name.find("Forrest") > -1 or name.find("Beau") > -1:
 		if random.randrange(1) == 1:
-			answer = "{}, to proceed, we must have a human sacrifice..."
+			answer = "{}, to proceed, we must have a human sacrifice...".format(name)
 		else:
 			answer = "{}, your sacrifice is not sufficient. Please kill again."
 	elif question.lower().find("created") > -1 and question.lower().find("you") > -1:

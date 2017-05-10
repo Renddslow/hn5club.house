@@ -16,6 +16,7 @@ from services.bs.service import bs_api
 from services.trump.service import trump_api
 from services.word.service import word_api
 from services.magic8.service import magic8_api
+from services.tankslayer.service import tankslayer_api
 
 application = Flask(__name__)
 
@@ -24,6 +25,7 @@ application.register_blueprint(bs_api)
 application.register_blueprint(trump_api)
 application.register_blueprint(word_api)
 application.register_blueprint(magic8_api)
+application.register_blueprint(tankslayer_api)
 
 @application.before_request
 def before_request():

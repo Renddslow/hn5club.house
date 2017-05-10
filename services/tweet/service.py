@@ -1,11 +1,12 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
-from tweet import post_tweet
+from services.tweet.tweet import post_tweet
 
 tweet_api = Blueprint("services.tweet.service", __name__)
 
 
 @tweet_api.route("/api/v1/tweet", methods=['POST'])
+def tweet():
 	request_from_hipchat = request.get_json()
 	message = request_from_hipchat['item']['message']['message'].replace("/tweet ", "")
 	from_person = request_from_hipchat['item']['message']['from']['name']
