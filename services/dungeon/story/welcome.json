@@ -1,0 +1,8 @@
+{
+	"welcome": {
+		"welcome001": "Greetings. I take it by your instrument you are bard. What do you call that instrument?",
+		"welcome002": "I'm afraid I'm not familiar with that instrument. Are you sure that's what it's called?",
+		"welcome003": "That doesn't sound like any instrument name I've ever heard. I don't think that's what you call it.",
+		"welcome004": "Ah of course, a {}. You know I think my mother used to play one of those. Ah such memories. But enough of that. Welcome to the Ecinev, the city of Wonders. Allow me to be your guide. But first, what is your name?",
+		""
+	}
