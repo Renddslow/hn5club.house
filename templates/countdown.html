@@ -1,0 +1,23 @@
+{% extends "main-layout.html" %}
+
+{% block content %}
+<script type="text/javascript">
+	$(function() {
+		$.ajax({
+			type: "GET",
+			url: "/api/v1/daysLeft",
+			success: function(e) {
+				displayNumber(e.daysLeft);
+			} 
+		});
+	});
+
+	var displayNumber = function(message) {
+		$(".numbers span").html(message);
+	};
+</script>
+<div class="numbers">
+	<span></span>
+	<p>days left of HN5</p>
+</div>
+{% endblock %}

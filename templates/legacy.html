@@ -1,0 +1,12 @@
+{%  extends "main-layout.html" %}
+
+{% block content %}
+<div class="legacy">
+	<h1>Continuing the Legacy of...</h1>
+	<ul>
+		{% for person in people %}
+		<li>{{ person }}</li>
+		{% endfor %}
+	</ul>
+</div>
+{% endblock %}

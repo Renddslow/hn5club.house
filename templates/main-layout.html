@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+	<head>
+		<title>{{ title }}</title>
+		<meta charset="utf-8">
+		<meta name="description" content="HN5 Clubhouse, where the karma is cheap and the laughs are hearty.">
+		<meta name="robots" content="index, follow">
+		<meta name="author" content="HN5 Clubhouse">
+		<meta property="og:type" content="profile">
+		<meta property="og:title" content="{{ title }}">
+		<meta property="og:url" content="http://hn5club.house">
+		<meta property="og:image" content="https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?dpr=1&auto=format&fit=crop&w=500&h=500&q=24&cs=tinysrgb&crop=&bg=">
+		<meta property="profile:first_name" content="HN5">
+		<meta property="profile:last_name" content="Clubhouse">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:site" content="@onlyinhn5">
+		<meta name="twitter:title" content="{{ title }}">
+		<meta name="twitter:description" content="Days left until the end of HN5">
+		<meta name="twitter:image" content="https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?dpr=1&auto=format&fit=crop&w=500&h=500&q=24&cs=tinysrgb&crop=&bg=">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="/static/style.css">
+		<script type="application/ld+json">
+			{
+				"@context": "http://schema.org/",
+				"@type": "Person",
+				"name": "HN5 Clubhouse",
+				"title": "Closing tickets and taking names.",
+				"address": {
+					"@type": "PostalAddress",
+					"addressLocality": "Omaha",
+					"addressRegion": "NE"
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="wrapper">
+			{% block content %}
+			{% endblock %}
+			<footer>
+				{{ footer | safe }}
+			</footer>
+		</div>
+	</body>
+</html>
