@@ -44,3 +44,21 @@ def urban_dict_get():
 		"card": card
 	}
 	return jsonify(response)
+
+
+@word_api.route("/api/v1/seo/meta", methods=['POST'])
+def seo_meta():
+	urls = request.form['urls']
+	headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"}
+	response = []
+	for url in urls.split(","):
+		seo = requests.get(url, verify=False, headers=headers)
+		d = pq(seo.text)
+		data = {
+			"url": url,
+			"title": d("title").html(),
+			"description": d("meta[name='description']").attr("content"),
+			"canonical": d("link[rel='canonical']").attr("href")
+		}
+		response.append(data)
+	return jsonify(response)

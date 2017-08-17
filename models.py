@@ -39,3 +39,10 @@ class Messages(BaseModel):
 	message_text = CharField(max_length=918)
 	message_type = IntegerField()
 	message_created = DateTimeField(default=datetime.datetime.now())
+
+
+class Questions(BaseModel):
+	question_id = PrimaryKeyField()
+	question_text = TextField()
+	question_sender = CharField()
+	question_sender_name = CharField(default=None)

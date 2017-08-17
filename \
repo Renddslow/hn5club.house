@@ -10,10 +10,9 @@ import random
 import requests
 from flask import Flask, jsonify, request, render_template, Response, g
 import redis
-from twilio.rest import TwilioRestClient
 
 from lonely import Lonely
-from models import DATABASE, Questions
+from models import DATABASE
 
 from services.tweet.service import tweet_api
 from services.bs.service import bs_api
@@ -98,7 +97,7 @@ def loop_units(unit_array, time_dict, callback):
 		if i == 0 and time_dict[unit_array[i]] > 1:
 			return callback(unit_array[i], True)
 		elif i == 0 and time_dict[unit_array[i]] == 1:
-			return callback(unit_array[i], False)
+			return callback(unit, False)
 		elif time_dict[unit_array[i - 1]] == 0 and time_dict[unit_array[i]] > 1:
 			return callback(unit_array[i], True)
 		else:
@@ -167,45 +166,6 @@ def lonely_messages():
 	message = lonely.get_messages(day_of_week)
 	lonely.get_subscribers(message)
 	return jsonify(True)
-
-
-@application.route("/api/v1/questions", methods=['POST'])
-def questions():
-	_form = request.form
-	#setup = requests.get("https://api.flatlandchurch.com/v1/sms/settings?number=14025094631", verify=False).json()
-	setup = {
-		'is_active': True,
-		'numbers': ['+14028850620', '+14026900493']
-	}
-	response = Element('Response')
-	message_tag = SubElement(response, 'Message')
-
-	lonely = Lonely()
-
-	if setup['is_active'] and _form['From'] is not "+16103347182":
-		for number in setup['numbers']:
-			lonely.client.messages.create(
-				body = _form['Body'],
-				to = number,
-				from_ = "+14025094631"
-			)
-		message_tag.text = "Thanks so much for your question! If we are unable to get to your question tonight, we recommend reaching out to your life group leader or info@flatlandchurch.com."
-		try:
-			sender = Questions.get(question_sender = _form['From'])
-		except Questions.DoesNotExist:
-			Questions.create(
-				question_text = _form['Body'],
-				question_sender = _form['From']
-			)
-		else:
-			Questions.create(
-				question_text = _form['Body'],
-				question_sender = _form['From'],
-				question_sender_name = sender.question_sender_name
-			)
-	else:
-		message_tag.text = "Unfortunately we are not taking questions right now."
-	return Response(prettify(response), mimetype='text/xml')
 
 
 @application.route("/api/v1/lonely/messages", methods=['POST'])
